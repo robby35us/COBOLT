@@ -17,18 +17,19 @@ public class DFAMinimization {
 
     public  FiniteAutomaton apply(FiniteAutomaton dfa) {
         initializeTempSet(dfa);
-        while(!partitionSet.isEmpty()){
+        while(!tempPSet.equals(partitionSet)) {
             partitionSet = tempPSet;
             tempPSet = new HashSet<>();
             for(Partition p : partitionSet) {
                 Set<Partition> resultOfSplit = split(p);
-                if(resultOfSplit.size() > 1) {
+                //if(resultOfSplit.size() > 1) {
                     tempPSet.addAll(resultOfSplit);
-                } else {
-                    finalPSet.addAll(resultOfSplit);
-                }
+                //} else {
+                //    finalPSet.addAll(resultOfSplit);
+                //}
             }
         }
+        finalPSet = tempPSet;
         int sum = 0;
         for(Partition p : finalPSet) {
             sum += p.getStates().size();
@@ -43,7 +44,7 @@ public class DFAMinimization {
         tempPSet.add(new Partition(dfa.getNonAcceptingStates()));
         tempPSet.add(new Partition(dfa.getAcceptingStates()));
 
-        partitionSet = tempPSet;
+        partitionSet = null;
         finalPSet = new HashSet<>();
     }
 
@@ -115,28 +116,14 @@ public class DFAMinimization {
 
         FiniteAutomaton resultingDFA = new FiniteAutomaton(resultingStartingState, true);
         for (Partition p : finalPSet) {
-            Set<Character> chars = new HashSet<>();
+            State newState = resultingDFAStates.get(p);
             for (State s : p.getStates()) {
-                chars.addAll(s.getOutTransitionChars());
-            }
-            if(chars.isEmpty())
-                continue;
-
-
-            State inState = resultingDFAStates.get(p);
-
-            State tempInState = p.getStates().iterator().next();
-            char tempChar = tempInState.getOutTransitionChars().iterator().next();
-            State tempOutState = tempInState.getEndState(tempChar);
-
-            State outState = null;
-            for (Partition q : finalPSet) {
-                if (q.getStates().contains(tempOutState)) {
-                    outState = resultingDFAStates.get(q);
-                    break;
+                Set<Character> outTransitionChars = s.getOutTransitionChars();
+                for(char outChar : outTransitionChars) {
+                    resultingDFA.connectStatesOnChar( outChar, newState,
+                            resultingDFAStates.get(s.getEndState(outChar).getPartition()));
                 }
             }
-            resultingDFA.connectStatesOnChars(chars, inState, outState);
         }
         return resultingDFA;
     }

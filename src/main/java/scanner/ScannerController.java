@@ -60,8 +60,8 @@ public class ScannerController {
         FiniteAutomaton DFA = new SubsetConstruction().apply(ndfa);
         System.out.println(DFA);
 
-        DFA = new DFAMinimization().apply(DFA);
+        FiniteAutomaton minimizedDFA = new DFAMinimization().apply(DFA);
 
-        System.out.println(DFA);
+        System.out.println(minimizedDFA);
     }
 }

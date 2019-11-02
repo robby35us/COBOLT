@@ -6,11 +6,11 @@ public class Configuration {
     private Set<State> states;
     private State resultingState;
 
-    public Configuration(Set<State> states){
+    public Configuration(Set<State> states) {
 
         this.states = states;
         boolean markAsAccepting = false;
-        for(State s: states) {
+        for (State s : states) {
             if (s.isAcceptingState()) {
                 markAsAccepting = true;
                 break;

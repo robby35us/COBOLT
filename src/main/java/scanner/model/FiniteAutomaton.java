@@ -116,6 +116,7 @@ public class FiniteAutomaton {
     }
 
     private Set<Path> generatePathList(boolean searchCyclic) {
+        pathList.clear();
         if( searchCyclic) {
             for (State s : states) {
                 if (s != null)
@@ -129,9 +130,13 @@ public class FiniteAutomaton {
     private void explorePaths(State currentState, String currentString, boolean searchCyclic) {
         Set<Character> outCharacters = currentState.getOutTransitionChars();
         Set<State> epsilonStates = currentState.getEpsilonStates();
-        if ((searchCyclic && currentState.isMarked()) || (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
+        if ((searchCyclic && currentState.isMarked()) ||
+            (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
             pathList.add(new Path(currentString));
             return;
+        }
+        if(currentState.isAcceptingState()) {
+            pathList.add(new Path(currentString));
         }
         if(searchCyclic)
             currentState.setMarked(true);

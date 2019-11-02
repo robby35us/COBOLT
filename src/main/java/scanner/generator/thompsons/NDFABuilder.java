@@ -39,7 +39,7 @@ public class NDFABuilder {
 
     private void connectNewEnd(State as) {
         as.setEndState(EPSILON, resultAcceptingState);
-        as.setAcceptingState(false);
+        //as.setAcceptingState(false);
     }
 
     private void addMiddleStates(FiniteAutomaton nfa) {
