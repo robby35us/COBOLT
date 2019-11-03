@@ -1,5 +1,9 @@
 package scanner.model;
 
+import scanner.generator.subset.Configuration;
+import scanner.generator.util.FAPathExplorer;
+import scanner.generator.util.Path;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -97,7 +101,7 @@ public class FiniteAutomaton {
 
     @Override
     public String toString() {
-        return generatePathList(deterministic).toString();
+        return new FAPathExplorer(this).generatePathList(deterministic).toString();
     }
 
     @Override
@@ -113,38 +117,5 @@ public class FiniteAutomaton {
       return false;
         //  return o instanceof FiniteAutomaton
        //         && this.generatePathList().containsAll(((FiniteAutomaton) o).generatePathList());
-    }
-
-    private Set<Path> generatePathList(boolean searchCyclic) {
-        pathList.clear();
-        if( searchCyclic) {
-            for (State s : states) {
-                if (s != null)
-                    s.setMarked(false);
-            }
-        }
-        explorePaths(startingState, "", searchCyclic);
-        return pathList;
-    }
-
-    private void explorePaths(State currentState, String currentString, boolean searchCyclic) {
-        Set<Character> outCharacters = currentState.getOutTransitionChars();
-        Set<State> epsilonStates = currentState.getEpsilonStates();
-        if ((searchCyclic && currentState.isMarked()) ||
-            (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
-            pathList.add(new Path(currentString));
-            return;
-        }
-        if(currentState.isAcceptingState()) {
-            pathList.add(new Path(currentString));
-        }
-        if(searchCyclic)
-            currentState.setMarked(true);
-        for (State es : epsilonStates) {
-            explorePaths(es, currentString + EPSILON, searchCyclic);
-        }
-        for (char c : outCharacters) {
-            explorePaths(currentState.getEndState(c), currentString + c, searchCyclic);
-        }
     }
 }

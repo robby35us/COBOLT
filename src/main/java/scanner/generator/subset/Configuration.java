@@ -1,4 +1,6 @@
-package scanner.model;
+package scanner.generator.subset;
+
+import scanner.model.State;
 
 import java.util.Set;
 

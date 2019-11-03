@@ -47,7 +47,10 @@ public class Scanner {
 
     private static void generateScanner(Set<Regex> entries) {
         FiniteAutomaton NDFA = new ThompsonsConstruction().apply(entries);
+        System.out.println(NDFA);
         FiniteAutomaton DFA = new SubsetConstruction().apply(NDFA);
+        System.out.println(DFA);
         FiniteAutomaton minimizedDFA = new DFAMinimization().apply(DFA);
+        System.out.println(minimizedDFA);
     }
 }

@@ -1,5 +1,7 @@
 package scanner.model;
 
+import scanner.generator.minimization.Partition;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,11 +22,11 @@ public class State {
         epsilonStates = new HashSet<>();
     }
 
-    boolean isMarked() {
+    public boolean isMarked() {
         return marked;
     }
 
-    void setMarked(boolean marked) {
+    public void setMarked(boolean marked) {
         this.marked = marked;
     }
 
@@ -51,7 +53,7 @@ public class State {
             endStateMap.put (c, endState);
     }
 
-    void setEndState(Set<Character> characterSet, State endState) {
+    public void setEndState(Set<Character> characterSet, State endState) {
         for(char c : characterSet) {
             endStateMap.put(c, endState);
         }
@@ -65,7 +67,7 @@ public class State {
         return endStateMap.keySet();
     }
 
-    Set<State> getEpsilonStates() {
+    public Set<State> getEpsilonStates() {
         return epsilonStates;
     }
 }

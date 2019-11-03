@@ -1,6 +1,5 @@
 package scanner.generator.subset;
 import scanner.language.CobolCharacter;
-import scanner.model.Configuration;
 import scanner.model.FiniteAutomaton;
 import scanner.model.State;
 

@@ -1,9 +1,9 @@
-package scanner.model;
+package scanner.generator.util;
 
-public class Path {
+public class Path implements  Comparable<Path>{
     private String pathString;
 
-    public Path(String string) {
+    Path(String string) {
         pathString = string;
     }
 
@@ -16,5 +16,10 @@ public class Path {
     @Override
     public String toString() {
         return pathString;
+    }
+
+    @Override
+    public int compareTo(Path o) {
+        return this.pathString.compareTo(o.pathString);
     }
 }

@@ -2,7 +2,6 @@ package scanner.generator.minimization;
 
 import scanner.language.CobolCharacter;
 import scanner.model.FiniteAutomaton;
-import scanner.model.Partition;
 import scanner.model.State;
 
 import java.util.HashMap;

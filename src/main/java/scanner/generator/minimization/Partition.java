@@ -1,22 +1,24 @@
-package scanner.model;
+package scanner.generator.minimization;
+
+import scanner.model.State;
 
 import java.util.Set;
 
 public class Partition {
     private Set<State> states;
 
-    public Partition(Set<State> states) {
+    Partition(Set<State> states) {
         this.states = states;
         for(State s : states) {
             s.setPartition(this);
         }
     }
 
-    public Set<State> getStates() {
+    Set<State> getStates() {
         return states;
     }
 
-    public boolean containsAcceptingState() {
+    boolean containsAcceptingState() {
         for(State s : states) {
             if (s.isAcceptingState())
                 return true;
