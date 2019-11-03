@@ -1,6 +1,8 @@
 package scanner.generator.subset;
 import scanner.language.CobolCharacter;
 import scanner.model.FiniteAutomaton;
+import scanner.model.NDFA;
+import scanner.model.NDFAState;
 import scanner.model.State;
 
 import java.util.ArrayList;
@@ -12,14 +14,14 @@ import java.util.Set;
 public class SubsetConstruction {
 
     private FiniteAutomaton dfa;
-    private FiniteAutomaton nfa;
+    private NDFA ndfa;
     private List<Configuration> workList;
     private List<Configuration> configs;
     private Configuration workItem;
     private Configuration newWorkItem;
 
-    public FiniteAutomaton apply(FiniteAutomaton nfa) {
-        this.nfa = nfa;
+    public FiniteAutomaton apply(NDFA ndfa) {
+        this.ndfa = ndfa;
         initialize();
         while(!workList.isEmpty()) {
             workItem = workList.remove(0);
@@ -32,11 +34,11 @@ public class SubsetConstruction {
     }
 
     private void initialize() {
-        Set<State> stateSet = new HashSet<>();
-        stateSet.add(nfa.getStartingState());
+        Set<NDFAState> stateSet = new HashSet<>();
+        stateSet.add( ndfa.getStartingState());
 
         workList = new LinkedList<>();
-        workList.add(nfa.getEpsilonClosure(stateSet));
+        workList.add(getEpsilonClosure(stateSet));
 
         dfa = new FiniteAutomaton(workList.get(0).getResultingState(), true);
 
@@ -46,7 +48,7 @@ public class SubsetConstruction {
 
     private void cleanup() {
         dfa = null;
-        nfa = null;
+        ndfa = null;
         workList = null;
         configs = null;
         workItem = null;
@@ -65,7 +67,28 @@ public class SubsetConstruction {
     }
 
     private  Configuration getEClosureOFDeltaOf(char c) {
-        return nfa.getEpsilonClosure(nfa.getDelta(workItem, c));
+        return getEpsilonClosure(getDelta(workItem, c));
+    }
+
+    private Set<NDFAState> getDelta(Configuration q, char c) {
+        Set<NDFAState> delta = new HashSet<>();
+        for (State state : q.getStates()) {
+            if (state.getEndState(c) != null)
+                delta.add((NDFAState) state.getEndState(c));
+        }
+        return delta;
+    }
+
+
+    private Configuration getEpsilonClosure(Set<NDFAState> states) {
+        if (states.size() == 0) {
+            return null;
+        }
+        Set<NDFAState> epsilonClosure = new HashSet<>(states);
+        for (NDFAState s: states) {
+            epsilonClosure.addAll(s.getEpsilonStates());
+        }
+        return new Configuration(epsilonClosure);
     }
 
     private  void manageTransitions(char c) {

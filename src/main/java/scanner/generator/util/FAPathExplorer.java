@@ -1,8 +1,10 @@
 package scanner.generator.util;
 
 import scanner.model.FiniteAutomaton;
+import scanner.model.NDFAState;
 import scanner.model.State;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +34,9 @@ public class FAPathExplorer {
 
     private void explorePaths(State currentState, String currentString, boolean searchCyclic) {
         Set<Character> outCharacters = currentState.getOutTransitionChars();
-        Set<State> epsilonStates = currentState.getEpsilonStates();
+        Set<NDFAState> epsilonStates = new HashSet<>();
+        if(currentState instanceof NDFAState)
+                epsilonStates = ((NDFAState) currentState).getEpsilonStates();
         if ((searchCyclic && currentState.isMarked()) ||
                 (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
             pathSet.add(new Path(currentString));
@@ -43,7 +47,7 @@ public class FAPathExplorer {
         }
         if(searchCyclic)
             currentState.setMarked(true);
-        for (State es : epsilonStates) {
+        for (NDFAState  es : epsilonStates) {
             explorePaths(es, currentString + EPSILON, searchCyclic);
         }
         for (char c : outCharacters) {

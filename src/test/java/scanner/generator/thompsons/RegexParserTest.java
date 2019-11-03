@@ -3,8 +3,8 @@ package scanner.generator.thompsons;
 import org.junit.Assert;
 import org.junit.Test;
 import scanner.language.Regex;
-import scanner.model.FiniteAutomaton;
-import scanner.model.State;
+import scanner.model.NDFA;
+import scanner.model.NDFAState;
 
 public class RegexParserTest {
     private RegexParser parser = new RegexParser();
@@ -12,8 +12,8 @@ public class RegexParserTest {
     @Test
     public void emptyStringProducesEmptyFA() {
         Regex pattern = new Regex("");
-        FiniteAutomaton actual = parser.parseExpression(pattern);
-        Assert.assertEquals(new FiniteAutomaton(new State(true), false), actual);
+        NDFA actual = parser.parseExpression(pattern);
+        Assert.assertEquals(new NDFA(new NDFAState(true)), actual);
     }
 
     @Test
@@ -21,10 +21,10 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a");
 
-        FiniteAutomaton expected = AutomataBuilder.buildSimple('a');
+        NDFA expected = IntermediateNDFABuilder.buildSimple('a');
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         //Assert
         Assert.assertEquals(expected, actual);
@@ -35,12 +35,12 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("ab");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton expected = AutomataBuilder.buildAnd(a, b);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA expected = IntermediateNDFABuilder.buildAnd(a, b);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -51,14 +51,14 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("abc");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton temp = AutomataBuilder.buildAnd(a, b);
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton expected = AutomataBuilder.buildAnd(temp, c);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA temp = IntermediateNDFABuilder.buildAnd(a, b);
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA expected = IntermediateNDFABuilder.buildAnd(temp, c);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -69,12 +69,12 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a|b");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton expected = AutomataBuilder.buildOr(a, b);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA expected = IntermediateNDFABuilder.buildOr(a, b);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -85,14 +85,14 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a|b|c");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton temp = AutomataBuilder.buildOr(a, b);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(temp, c);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA temp = IntermediateNDFABuilder.buildOr(a, b);
+        NDFA expected = IntermediateNDFABuilder.buildOr(temp, c);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -103,14 +103,14 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("ab|c");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton temp = AutomataBuilder.buildAnd(a, b);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(temp, c);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA temp = IntermediateNDFABuilder.buildAnd(a, b);
+        NDFA expected = IntermediateNDFABuilder.buildOr(temp, c);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -121,14 +121,14 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a|bc");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton temp = AutomataBuilder.buildAnd(b, c);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(a, temp);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA temp = IntermediateNDFABuilder.buildAnd(b, c);
+        NDFA expected = IntermediateNDFABuilder.buildOr(a, temp);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -139,16 +139,16 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a|bc|d");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton d = AutomataBuilder.buildSimple('d');
-        FiniteAutomaton temp1 = AutomataBuilder.buildAnd(b, c);
-        FiniteAutomaton temp2 = AutomataBuilder.buildOr(a, temp1);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(temp2, d);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA d = IntermediateNDFABuilder.buildSimple('d');
+        NDFA temp1 = IntermediateNDFABuilder.buildAnd(b, c);
+        NDFA temp2 = IntermediateNDFABuilder.buildOr(a, temp1);
+        NDFA expected = IntermediateNDFABuilder.buildOr(temp2, d);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -159,10 +159,10 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("(a)");
 
-        FiniteAutomaton expected = AutomataBuilder.buildSimple('a');
+        NDFA expected = IntermediateNDFABuilder.buildSimple('a');
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         //Assert
         Assert.assertEquals(expected, actual);
@@ -174,16 +174,16 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("(a|b)c|d");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton d = AutomataBuilder.buildSimple('d');
-        FiniteAutomaton temp1 = AutomataBuilder.buildOr(a, b);
-        FiniteAutomaton temp2 = AutomataBuilder.buildAnd(temp1, c);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(temp2, d);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA d = IntermediateNDFABuilder.buildSimple('d');
+        NDFA temp1 = IntermediateNDFABuilder.buildOr(a, b);
+        NDFA temp2 = IntermediateNDFABuilder.buildAnd(temp1, c);
+        NDFA expected = IntermediateNDFABuilder.buildOr(temp2, d);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -193,16 +193,16 @@ public class RegexParserTest {
     public void perCharOrCharPerAndCharOrCharProducesOrOrAnd() {
         // Arrange
         Regex pattern = new Regex("(a|b)(c|d)");
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton d = AutomataBuilder.buildSimple('d');
-        FiniteAutomaton temp1 = AutomataBuilder.buildOr(a, b);
-        FiniteAutomaton temp2 = AutomataBuilder.buildOr(c, d);
-        FiniteAutomaton expected = AutomataBuilder.buildAnd(temp1, temp2);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA d = IntermediateNDFABuilder.buildSimple('d');
+        NDFA temp1 = IntermediateNDFABuilder.buildOr(a, b);
+        NDFA temp2 = IntermediateNDFABuilder.buildOr(c, d);
+        NDFA expected = IntermediateNDFABuilder.buildAnd(temp1, temp2);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -213,16 +213,16 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a|b(c|d)");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton d = AutomataBuilder.buildSimple('d');
-        FiniteAutomaton temp1 = AutomataBuilder.buildOr(c, d);
-        FiniteAutomaton temp2 = AutomataBuilder.buildAnd(b, temp1);
-        FiniteAutomaton expected = AutomataBuilder.buildOr(a, temp2);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA d = IntermediateNDFABuilder.buildSimple('d');
+        NDFA temp1 = IntermediateNDFABuilder.buildOr(c, d);
+        NDFA temp2 = IntermediateNDFABuilder.buildAnd(b, temp1);
+        NDFA expected = IntermediateNDFABuilder.buildOr(a, temp2);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -233,11 +233,11 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a*");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton expected = AutomataBuilder.buildClosure(a);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA expected = IntermediateNDFABuilder.buildClosure(a);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
 
         // Assert
@@ -249,13 +249,13 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("(a|b)*");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton temp = AutomataBuilder.buildOr(a, b);
-        FiniteAutomaton expected = AutomataBuilder.buildClosure(temp);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA temp = IntermediateNDFABuilder.buildOr(a, b);
+        NDFA expected = IntermediateNDFABuilder.buildClosure(temp);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);
@@ -266,29 +266,29 @@ public class RegexParserTest {
         // Arrange
         Regex pattern = new Regex("a(bc|d*(e|f))(g|h)ij");
 
-        FiniteAutomaton a = AutomataBuilder.buildSimple('a');
-        FiniteAutomaton b = AutomataBuilder.buildSimple('b');
-        FiniteAutomaton c = AutomataBuilder.buildSimple('c');
-        FiniteAutomaton d = AutomataBuilder.buildSimple('d');
-        FiniteAutomaton e = AutomataBuilder.buildSimple('e');
-        FiniteAutomaton f = AutomataBuilder.buildSimple('f');
-        FiniteAutomaton g = AutomataBuilder.buildSimple('g');
-        FiniteAutomaton h = AutomataBuilder.buildSimple('h');
-        FiniteAutomaton i = AutomataBuilder.buildSimple('i');
-        FiniteAutomaton j = AutomataBuilder.buildSimple('j');
-        FiniteAutomaton temp1 = AutomataBuilder.buildAnd(b, c);
-        FiniteAutomaton temp2 = AutomataBuilder.buildClosure(d);
-        FiniteAutomaton temp3 = AutomataBuilder.buildOr(e,f);
-        FiniteAutomaton temp4 = AutomataBuilder.buildAnd(temp2, temp3);
-        FiniteAutomaton temp5 = AutomataBuilder.buildOr(temp1, temp4);
-        FiniteAutomaton temp6 = AutomataBuilder.buildAnd(a, temp5);
-        FiniteAutomaton temp7 = AutomataBuilder.buildOr(g, h);
-        FiniteAutomaton temp8 = AutomataBuilder.buildAnd(temp6, temp7);
-        FiniteAutomaton temp9 = AutomataBuilder.buildAnd(temp8, i);
-        FiniteAutomaton expected = AutomataBuilder.buildAnd(temp9, j);
+        NDFA a = IntermediateNDFABuilder.buildSimple('a');
+        NDFA b = IntermediateNDFABuilder.buildSimple('b');
+        NDFA c = IntermediateNDFABuilder.buildSimple('c');
+        NDFA d = IntermediateNDFABuilder.buildSimple('d');
+        NDFA e = IntermediateNDFABuilder.buildSimple('e');
+        NDFA f = IntermediateNDFABuilder.buildSimple('f');
+        NDFA g = IntermediateNDFABuilder.buildSimple('g');
+        NDFA h = IntermediateNDFABuilder.buildSimple('h');
+        NDFA i = IntermediateNDFABuilder.buildSimple('i');
+        NDFA j = IntermediateNDFABuilder.buildSimple('j');
+        NDFA temp1 = IntermediateNDFABuilder.buildAnd(b, c);
+        NDFA temp2 = IntermediateNDFABuilder.buildClosure(d);
+        NDFA temp3 = IntermediateNDFABuilder.buildOr(e,f);
+        NDFA temp4 = IntermediateNDFABuilder.buildAnd(temp2, temp3);
+        NDFA temp5 = IntermediateNDFABuilder.buildOr(temp1, temp4);
+        NDFA temp6 = IntermediateNDFABuilder.buildAnd(a, temp5);
+        NDFA temp7 = IntermediateNDFABuilder.buildOr(g, h);
+        NDFA temp8 = IntermediateNDFABuilder.buildAnd(temp6, temp7);
+        NDFA temp9 = IntermediateNDFABuilder.buildAnd(temp8, i);
+        NDFA expected = IntermediateNDFABuilder.buildAnd(temp9, j);
 
         // Act
-        FiniteAutomaton actual = parser.parseExpression(pattern);
+        NDFA actual = parser.parseExpression(pattern);
 
         // Assert
         Assert.assertEquals(expected, actual);

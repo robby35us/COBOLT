@@ -1,14 +1,15 @@
 package scanner.generator.subset;
 
+import scanner.model.NDFAState;
 import scanner.model.State;
 
 import java.util.Set;
 
 public class Configuration {
-    private Set<State> states;
+    private Set<NDFAState> states;
     private State resultingState;
 
-    public Configuration(Set<State> states) {
+    Configuration(Set<NDFAState> states) {
 
         this.states = states;
         boolean markAsAccepting = false;
@@ -21,11 +22,11 @@ public class Configuration {
         resultingState = new State(markAsAccepting);
     }
 
-    public Set<State> getStates() {
+    Set<NDFAState> getStates() {
         return states;
     }
 
-    public State getResultingState() {
+    State getResultingState() {
         return resultingState;
     }
 

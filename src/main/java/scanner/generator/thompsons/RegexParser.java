@@ -1,16 +1,16 @@
 package scanner.generator.thompsons;
 
 import scanner.language.Regex;
-import scanner.model.FiniteAutomaton;
-import scanner.model.State;
+import scanner.model.NDFA;
+import scanner.model.NDFAState;
 
 import java.util.Stack;
 
 class RegexParser {
     private Stack<Character> symbols = new Stack<>();
-    private Stack<FiniteAutomaton> nfas = new Stack<>();
+    private Stack<NDFA> ndfas = new Stack<>();
 
-    FiniteAutomaton parseExpression(Regex pattern) {
+    NDFA parseExpression(Regex pattern) {
         processCharsInPattern(pattern);
         processRemainingSymbols();
         return resultOrEmpty();
@@ -26,9 +26,9 @@ class RegexParser {
             processSymbolFromStack(symbols.pop());
     }
 
-    private FiniteAutomaton resultOrEmpty() {
-        return !nfas.empty() ? nfas.pop() :
-                new FiniteAutomaton(new State(true), false);
+    private NDFA resultOrEmpty() {
+        return !ndfas.empty() ? ndfas.pop() :
+                new NDFA(new NDFAState(true));
     }
 
     private void processChar(char c) {
@@ -44,10 +44,10 @@ class RegexParser {
         } else if (isSymbol(c)) {
             processSymbol(c);
         } else {
-            nfas.push(AutomataBuilder.buildSimple(c));
+            ndfas.push(IntermediateNDFABuilder.buildSimple(c));
         }
 
-        if (symbols.size() < nfas.size() - 1){
+        if (symbols.size() < ndfas.size() - 1){
             symbols.push(' ');
         }
     }
@@ -55,19 +55,19 @@ class RegexParser {
     private void processSymbolFromStack(char symbol) {
         switch (symbol) {
             case '*':
-                nfas.push(AutomataBuilder.buildClosure(nfas.pop()));
+                ndfas.push(IntermediateNDFABuilder.buildClosure(ndfas.pop()));
                 break;
             case '(': // not sure about this
             case ' ':
-                FiniteAutomaton andTemp = nfas.pop();
-                if(!nfas.empty())
-                    nfas.push(AutomataBuilder.buildAnd(nfas.pop(), andTemp));
+                NDFA andTemp = ndfas.pop();
+                if(!ndfas.empty())
+                    ndfas.push(IntermediateNDFABuilder.buildAnd(ndfas.pop(), andTemp));
                 else
-                    nfas.push(andTemp);
+                    ndfas.push(andTemp);
                 break;
             case '|':
-                FiniteAutomaton orTemp = nfas.pop();
-                nfas.push(AutomataBuilder.buildOr(nfas.pop(), orTemp));
+                NDFA orTemp = ndfas.pop();
+                ndfas.push(IntermediateNDFABuilder.buildOr(ndfas.pop(), orTemp));
                 break;
             case ')':
                 break;

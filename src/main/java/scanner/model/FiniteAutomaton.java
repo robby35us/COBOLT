@@ -1,8 +1,6 @@
 package scanner.model;
 
-import scanner.generator.subset.Configuration;
 import scanner.generator.util.FAPathExplorer;
-import scanner.generator.util.Path;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +13,9 @@ public class FiniteAutomaton {
     private State startingState;
     private Set<State> states;
     private Set<State> acceptingStates;
-    private Set<Path> pathList;
 
     public FiniteAutomaton(State startingState, boolean deterministic) {
-        pathList = new HashSet<>();
+        this.deterministic = deterministic;
         this.startingState = startingState;
         this.states = new HashSet<>();
         this.states.add(startingState);
@@ -78,26 +75,7 @@ public class FiniteAutomaton {
         return nonAcceptingStates;
     }
 
-    public Set<State> getDelta(Configuration q, char c) {
-        Set<State> delta = new HashSet<>();
-        for (State state : q.getStates()) {
-            if (state.getEndState(c) != null)
-                delta.add(state.getEndState(c));
-        }
-        return delta;
-    }
 
-
-    public Configuration getEpsilonClosure(Set<State> states) {
-        if (states.size() == 0) {
-            return null;
-        }
-        Set<State> epsilonClosure = new HashSet<>(states);
-        for (State s : states) {
-            epsilonClosure.addAll(s.getEpsilonStates());
-        }
-        return new Configuration(epsilonClosure);
-    }
 
     @Override
     public String toString() {
@@ -106,16 +84,6 @@ public class FiniteAutomaton {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof FiniteAutomaton) {
-          for(Path p: ((FiniteAutomaton) o).pathList) {
-              if(!this.pathList.contains(p)) {
-                  return false;
-              }
-          }
-          return true;
-      }
-      return false;
-        //  return o instanceof FiniteAutomaton
-       //         && this.generatePathList().containsAll(((FiniteAutomaton) o).generatePathList());
+        return o instanceof FiniteAutomaton && this.toString().equals(o.toString());
     }
 }

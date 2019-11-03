@@ -1,7 +1,8 @@
 package scanner.generator.thompsons;
 
 import scanner.language.Regex;
-import scanner.model.FiniteAutomaton;
+import scanner.model.NDFA;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,18 +10,18 @@ public class ThompsonsConstruction {
 
     private RegexParser parser = new RegexParser();
 
-    public FiniteAutomaton apply(Set<Regex> patterns) {
-        Set<FiniteAutomaton> intermediateNFAs
-                = produceIntermediateNFAs(patterns);
-        return new NDFABuilder().build(intermediateNFAs);
+    public NDFA apply(Set<Regex> patterns) {
+        Set<NDFA> intermediateNDFAs
+                = produceIntermediateNDFAs(patterns);
+        return new ResultNDFABuilder().build(intermediateNDFAs);
     }
 
-    private Set<FiniteAutomaton> produceIntermediateNFAs(Set<Regex> patterns) {
-        Set<FiniteAutomaton> intermediateNFAs = new HashSet<>();
+    private Set<NDFA> produceIntermediateNDFAs(Set<Regex> patterns) {
+        Set<NDFA> intermediateNDFAs = new HashSet<>();
         for (Regex pattern : patterns) {
-            intermediateNFAs.add(parser.parseExpression(pattern));
+            intermediateNDFAs.add(parser.parseExpression(pattern));
         }
-        return intermediateNFAs;
+        return intermediateNDFAs;
     }
 
 }

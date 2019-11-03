@@ -10,16 +10,22 @@ import java.util.Set;
 import static scanner.model.FiniteAutomaton.EPSILON;
 
 public class State {
-    private Partition partition;
-    private boolean acceptingState;
-    private boolean marked = false;
+
+    // state specific data
     private Map<Character, State> endStateMap;
-    private Set<State> epsilonStates;
+    private boolean acceptingState;
+
+    // for depth-first search
+    private boolean marked = false;
+
+    // for the minimization algorithm
+    private Partition partition;
 
     public State(boolean acceptingState) {
         this.acceptingState = acceptingState;
         endStateMap = new HashMap<>();
-        epsilonStates = new HashSet<>();
+
+
     }
 
     public boolean isMarked() {
@@ -47,9 +53,6 @@ public class State {
     }
 
     public void setEndState(char c, State endState) {
-        if(c == EPSILON)
-            epsilonStates.add(endState);
-        else
             endStateMap.put (c, endState);
     }
 
@@ -65,9 +68,5 @@ public class State {
 
     public Set<Character> getOutTransitionChars() {
         return endStateMap.keySet();
-    }
-
-    public Set<State> getEpsilonStates() {
-        return epsilonStates;
     }
 }

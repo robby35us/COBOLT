@@ -5,6 +5,7 @@ import scanner.generator.subset.SubsetConstruction;
 import scanner.generator.thompsons.ThompsonsConstruction;
 import scanner.language.Regex;
 import scanner.model.FiniteAutomaton;
+import scanner.model.NDFA;
 
 import java.io.*;
 import java.util.HashSet;
@@ -46,11 +47,11 @@ public class Scanner {
     }
 
     private static void generateScanner(Set<Regex> entries) {
-        FiniteAutomaton NDFA = new ThompsonsConstruction().apply(entries);
-        System.out.println(NDFA);
-        FiniteAutomaton DFA = new SubsetConstruction().apply(NDFA);
-        System.out.println(DFA);
-        FiniteAutomaton minimizedDFA = new DFAMinimization().apply(DFA);
+        NDFA ndfa = new ThompsonsConstruction().apply(entries);
+        System.out.println(ndfa);
+        FiniteAutomaton dfa = new SubsetConstruction().apply(ndfa);
+        System.out.println(dfa);
+        FiniteAutomaton minimizedDFA = new DFAMinimization().apply(dfa);
         System.out.println(minimizedDFA);
     }
 }
