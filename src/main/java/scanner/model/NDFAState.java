@@ -7,7 +7,6 @@ import static scanner.model.FiniteAutomaton.EPSILON;
 
 public class NDFAState extends State {
 
-    // for non-deterministic FA's
     private Set<NDFAState> epsilonStates;
 
     public NDFAState(boolean acceptingState) {

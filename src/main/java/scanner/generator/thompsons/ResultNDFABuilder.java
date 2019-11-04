@@ -40,6 +40,7 @@ class ResultNDFABuilder {
 
     private void connectNewEnd(State as) {
         as.setEndState(EPSILON, resultAcceptingState);
+        as.setAcceptingState(false); // TODO how does this affect the output?
     }
 
     private void addMiddleStates(NDFA ndfa) {

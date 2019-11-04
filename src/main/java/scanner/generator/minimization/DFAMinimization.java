@@ -21,11 +21,7 @@ public class DFAMinimization {
             tempPSet = new HashSet<>();
             for(Partition p : partitionSet) {
                 Set<Partition> resultOfSplit = split(p);
-                //if(resultOfSplit.size() > 1) {
-                    tempPSet.addAll(resultOfSplit);
-                //} else {
-                //    finalPSet.addAll(resultOfSplit);
-                //}
+                tempPSet.addAll(resultOfSplit);
             }
         }
         finalPSet = tempPSet;
@@ -113,7 +109,7 @@ public class DFAMinimization {
                 resultingStartingState = resultingDFAStates.get(p);
         }
 
-        FiniteAutomaton resultingDFA = new FiniteAutomaton(resultingStartingState, true);
+        FiniteAutomaton resultingDFA = new FiniteAutomaton(resultingStartingState);
         for (Partition p : finalPSet) {
             State newState = resultingDFAStates.get(p);
             for (State s : p.getStates()) {

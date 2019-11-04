@@ -3,7 +3,6 @@ package scanner.model;
 import scanner.generator.minimization.Partition;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,8 +23,6 @@ public class State {
     public State(boolean acceptingState) {
         this.acceptingState = acceptingState;
         endStateMap = new HashMap<>();
-
-
     }
 
     public boolean isMarked() {
@@ -53,10 +50,12 @@ public class State {
     }
 
     public void setEndState(char c, State endState) {
-            endStateMap.put (c, endState);
+        if(c == EPSILON)
+            throw new IllegalArgumentException();
+        endStateMap.put (c, endState);
     }
 
-    public void setEndState(Set<Character> characterSet, State endState) {
+    void setEndState(Set<Character> characterSet, State endState) {
         for(char c : characterSet) {
             endStateMap.put(c, endState);
         }

@@ -9,13 +9,11 @@ public class FiniteAutomaton {
 
     public static final char EPSILON = '~';
 
-    private boolean deterministic;
     private State startingState;
     private Set<State> states;
     private Set<State> acceptingStates;
 
-    public FiniteAutomaton(State startingState, boolean deterministic) {
-        this.deterministic = deterministic;
+    public FiniteAutomaton(State startingState) {
         this.startingState = startingState;
         this.states = new HashSet<>();
         this.states.add(startingState);
@@ -32,7 +30,7 @@ public class FiniteAutomaton {
         this.addEndState(endState);
     }
 
-    public void addEndState(State endState) {
+    void addEndState(State endState) {
         if(endState == null)
             return;
         states.add(endState);
@@ -79,7 +77,7 @@ public class FiniteAutomaton {
 
     @Override
     public String toString() {
-        return new FAPathExplorer(this).generatePathList(deterministic).toString();
+        return new FAPathExplorer(this).generatePathList().toString();
     }
 
     @Override

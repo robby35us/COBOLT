@@ -20,38 +20,34 @@ public class FAPathExplorer {
         this.fa = fa;
     }
 
-    public Set<Path> generatePathList(boolean searchCyclic) {
+    public Set<Path> generatePathList() {
         pathSet.clear();
-        if( searchCyclic) {
-            for (State s : fa.getStates()) {
-                if (s != null)
-                    s.setMarked(false);
-            }
-        }
-        explorePaths(fa.getStartingState(), "", searchCyclic);
+        for (State s : fa.getStates())
+            s.setMarked(false);
+        explorePaths(fa.getStartingState(), "");
         return pathSet;
     }
 
-    private void explorePaths(State currentState, String currentString, boolean searchCyclic) {
+    private void explorePaths(State currentState, String currentString) {
         Set<Character> outCharacters = currentState.getOutTransitionChars();
         Set<NDFAState> epsilonStates = new HashSet<>();
         if(currentState instanceof NDFAState)
-                epsilonStates = ((NDFAState) currentState).getEpsilonStates();
-        if ((searchCyclic && currentState.isMarked()) ||
-                (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
+            epsilonStates = ((NDFAState) currentState).getEpsilonStates();
+
+        if(currentState.isMarked() || (outCharacters.isEmpty() && epsilonStates.isEmpty())) {
             pathSet.add(new Path(currentString));
             return;
         }
-        if(currentState.isAcceptingState()) {
-            pathSet.add(new Path(currentString));
-        }
-        if(searchCyclic)
-            currentState.setMarked(true);
+
+        currentState.setMarked(true);
+
         for (NDFAState  es : epsilonStates) {
-            explorePaths(es, currentString + EPSILON, searchCyclic);
+            explorePaths(es, currentString + EPSILON);
         }
-        for (char c : outCharacters) {
-            explorePaths(currentState.getEndState(c), currentString + c, searchCyclic);
+        for(char c : outCharacters) {
+            explorePaths(currentState.getEndState(c), currentString + c);
         }
+        currentState.setMarked(false);
+
     }
 }

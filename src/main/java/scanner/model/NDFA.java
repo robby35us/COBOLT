@@ -8,7 +8,7 @@ public class NDFA {
     private FiniteAutomaton automaton;
 
     public NDFA(NDFAState startingState) {
-        automaton = new FiniteAutomaton(startingState, false);
+        automaton = new FiniteAutomaton(startingState);
     }
 
     public void connectStatesOnChar(char c, NDFAState startState, NDFAState endState) {
@@ -63,6 +63,6 @@ public class NDFA {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof NDFA && automaton.equals(o);
+        return o instanceof NDFA && automaton.equals(((NDFA) o).automaton);
     }
 }

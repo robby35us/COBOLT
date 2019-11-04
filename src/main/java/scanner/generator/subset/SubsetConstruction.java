@@ -40,7 +40,7 @@ public class SubsetConstruction {
         workList = new LinkedList<>();
         workList.add(getEpsilonClosure(stateSet));
 
-        dfa = new FiniteAutomaton(workList.get(0).getResultingState(), true);
+        dfa = new FiniteAutomaton(workList.get(0).getResultingState());
 
         configs = new ArrayList<>();
         configs.add(workList.get(0));
