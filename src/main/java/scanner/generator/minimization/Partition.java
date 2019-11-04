@@ -1,20 +1,21 @@
 package scanner.generator.minimization;
 
-import scanner.model.State;
+import scanner.model.state.PartitionState;
+import scanner.model.state.State;
 
 import java.util.Set;
 
 public class Partition {
-    private Set<State> states;
+    private Set<PartitionState> states;
 
-    Partition(Set<State> states) {
+    Partition(Set<PartitionState> states) {
         this.states = states;
-        for(State s : states) {
+        for(PartitionState s : states) {
             s.setPartition(this);
         }
     }
 
-    Set<State> getStates() {
+    Set<PartitionState> getStates() {
         return states;
     }
 

@@ -1,12 +1,12 @@
 package scanner.generator.thompsons;
 
-import scanner.model.NDFA;
-import scanner.model.NDFAState;
-import scanner.model.State;
+import scanner.model.automata.NDFA;
+import scanner.model.state.NDFAState;
+import scanner.model.state.State;
 
 import java.util.Set;
 
-import static scanner.model.FiniteAutomaton.EPSILON;
+import static scanner.model.automata.DFA.EPSILON;
 
 class ResultNDFABuilder {
     private NDFAState resultStartingState;

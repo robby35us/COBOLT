@@ -1,14 +1,17 @@
-package scanner.model;
+package scanner.model.automata;
+
+import scanner.model.state.NDFAState;
+import scanner.model.state.State;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class NDFA {
 
-    private FiniteAutomaton automaton;
+    private DFA automaton;
 
     public NDFA(NDFAState startingState) {
-        automaton = new FiniteAutomaton(startingState);
+        automaton = new DFA(startingState);
     }
 
     public void connectStatesOnChar(char c, NDFAState startState, NDFAState endState) {
@@ -46,14 +49,6 @@ public class NDFA {
             acceptingStates.add((NDFAState) s);
         }
         return acceptingStates;
-    }
-
-    public Set<NDFAState> getNonAcceptingStates() {
-        Set<NDFAState> nonAcceptingStates = new HashSet<>();
-        for(State s: automaton.getNonAcceptingStates()) {
-            nonAcceptingStates.add((NDFAState) s);
-        }
-        return nonAcceptingStates;
     }
 
     @Override

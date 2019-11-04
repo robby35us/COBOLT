@@ -1,9 +1,9 @@
 package scanner.generator.subset;
 import scanner.language.CobolCharacter;
-import scanner.model.FiniteAutomaton;
-import scanner.model.NDFA;
-import scanner.model.NDFAState;
-import scanner.model.State;
+import scanner.model.automata.NDFA;
+import scanner.model.automata.PartitionDFA;
+import scanner.model.state.NDFAState;
+import scanner.model.state.State;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,24 +13,23 @@ import java.util.Set;
 
 public class SubsetConstruction {
 
-    private FiniteAutomaton dfa;
+    private PartitionDFA pdfa;
     private NDFA ndfa;
     private List<Configuration> workList;
     private List<Configuration> configs;
     private Configuration workItem;
     private Configuration newWorkItem;
 
-    public FiniteAutomaton apply(NDFA ndfa) {
+    public PartitionDFA apply(NDFA ndfa) {
         this.ndfa = ndfa;
         initialize();
         while(!workList.isEmpty()) {
             workItem = workList.remove(0);
             processConfiguration();
         }
-        dfa.updateAcceptingStates();
-        FiniteAutomaton tempResult = dfa;
-        cleanup();
-        return tempResult;
+        pdfa.updateAcceptingStates();
+        return pdfa;
+
     }
 
     private void initialize() {
@@ -40,19 +39,10 @@ public class SubsetConstruction {
         workList = new LinkedList<>();
         workList.add(getEpsilonClosure(stateSet));
 
-        dfa = new FiniteAutomaton(workList.get(0).getResultingState());
+        pdfa = new PartitionDFA(workList.get(0).getResultingState());
 
         configs = new ArrayList<>();
         configs.add(workList.get(0));
-    }
-
-    private void cleanup() {
-        dfa = null;
-        ndfa = null;
-        workList = null;
-        configs = null;
-        workItem = null;
-        newWorkItem = null;
     }
 
     private  void processConfiguration() {
@@ -104,7 +94,7 @@ public class SubsetConstruction {
     }
 
     private  void addTransitionToDFA(char c) {
-        dfa.connectStatesOnChar(c, workItem.getResultingState(),
+        pdfa.connectStatesOnChar(c, workItem.getResultingState(),
                 newWorkItem.getResultingState());
     }
 

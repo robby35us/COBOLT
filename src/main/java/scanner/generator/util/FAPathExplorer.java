@@ -1,21 +1,21 @@
 package scanner.generator.util;
 
-import scanner.model.FiniteAutomaton;
-import scanner.model.NDFAState;
-import scanner.model.State;
+import scanner.model.automata.DFA;
+import scanner.model.state.NDFAState;
+import scanner.model.state.State;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static scanner.model.FiniteAutomaton.EPSILON;
+import static scanner.model.automata.DFA.EPSILON;
 
 public class FAPathExplorer {
 
     private Set<Path> pathSet;
-    private FiniteAutomaton fa;
+    private DFA fa;
 
-    public FAPathExplorer(FiniteAutomaton fa) {
+    public FAPathExplorer(DFA fa) {
         pathSet = new TreeSet<>();
         this.fa = fa;
     }

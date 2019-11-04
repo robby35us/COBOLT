@@ -1,9 +1,9 @@
-package scanner.model;
+package scanner.model.state;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static scanner.model.FiniteAutomaton.EPSILON;
+import static scanner.model.automata.DFA.EPSILON;
 
 public class NDFAState extends State {
 

@@ -3,8 +3,8 @@ package scanner.generator.thompsons;
 import org.junit.Assert;
 import org.junit.Test;
 import scanner.language.Regex;
-import scanner.model.NDFA;
-import scanner.model.NDFAState;
+import scanner.model.automata.NDFA;
+import scanner.model.state.NDFAState;
 
 public class RegexParserTest {
     private RegexParser parser = new RegexParser();

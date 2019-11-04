@@ -1,8 +1,10 @@
 package scanner.generator.minimization;
 
 import scanner.language.CobolCharacter;
-import scanner.model.FiniteAutomaton;
-import scanner.model.State;
+import scanner.model.automata.DFA;
+import scanner.model.automata.PartitionDFA;
+import scanner.model.state.PartitionState;
+import scanner.model.state.State;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +16,7 @@ public class DFAMinimization {
     private  Set<Partition> partitionSet;
     private  Set<Partition> finalPSet;
 
-    public  FiniteAutomaton apply(FiniteAutomaton dfa) {
+    public DFA apply(PartitionDFA dfa) {
         initializeTempSet(dfa);
         while(!tempPSet.equals(partitionSet)) {
             partitionSet = tempPSet;
@@ -33,7 +35,7 @@ public class DFAMinimization {
         return buildResultingDFA(dfa);
     }
 
-    private  void initializeTempSet(FiniteAutomaton dfa) {
+    private void initializeTempSet(PartitionDFA dfa) {
 
         tempPSet = new HashSet<>();
         tempPSet.add(new Partition(dfa.getNonAcceptingStates()));
@@ -44,7 +46,7 @@ public class DFAMinimization {
     }
 
 
-    private  Set<Partition> split(Partition p) {
+    private Set<Partition> split(Partition p) {
         Set<Partition> splitOnC;
         for(char c : CobolCharacter.getCobolCharacterList()) {
             splitOnC = getSplitOnChar(c, p);
@@ -54,7 +56,7 @@ public class DFAMinimization {
         }
         splitOnC = new HashSet<>();
         splitOnC.add(p);
-        for(State s : p.getStates()) {
+        for(PartitionState s : p.getStates()) {
             s.setPartition(p);
         }
         return splitOnC;
@@ -62,12 +64,12 @@ public class DFAMinimization {
 
     private  Set<Partition> getSplitOnChar(char c, Partition p) {
         Partition primaryPartition = null;
-        Set<State> primaryPartitionStates = new HashSet<>();
-        Set<State> otherPartitionStates = new HashSet<>();
-        Set<State> remainderStates = new HashSet<>();
+        Set<PartitionState> primaryPartitionStates = new HashSet<>();
+        Set<PartitionState> otherPartitionStates = new HashSet<>();
+        Set<PartitionState> remainderStates = new HashSet<>();
 
-        for(State curState : p.getStates()) {
-            State outState = curState.getEndState(c);
+        for(PartitionState curState : p.getStates()) {
+            PartitionState outState = (PartitionState) curState.getEndState(c);
             if(outState == null) {
                 remainderStates.add(curState);
                 continue;
@@ -98,9 +100,9 @@ public class DFAMinimization {
         return newPartitions;
     }
 
-    private  FiniteAutomaton buildResultingDFA(FiniteAutomaton dfa) {
+    private DFA buildResultingDFA(PartitionDFA partitionDFA) {
         Map<Partition, State> resultingDFAStates = new HashMap<>();
-        Partition startingPartition = dfa.getStartingState().getPartition();
+        Partition startingPartition = partitionDFA.getStartingState().getPartition();
 
         State resultingStartingState = null;
         for (Partition p : finalPSet) {
@@ -109,14 +111,14 @@ public class DFAMinimization {
                 resultingStartingState = resultingDFAStates.get(p);
         }
 
-        FiniteAutomaton resultingDFA = new FiniteAutomaton(resultingStartingState);
+        DFA resultingDFA = new DFA(resultingStartingState);
         for (Partition p : finalPSet) {
             State newState = resultingDFAStates.get(p);
-            for (State s : p.getStates()) {
+            for (PartitionState s : p.getStates()) {
                 Set<Character> outTransitionChars = s.getOutTransitionChars();
                 for(char outChar : outTransitionChars) {
                     resultingDFA.connectStatesOnChar( outChar, newState,
-                            resultingDFAStates.get(s.getEndState(outChar).getPartition()));
+                            resultingDFAStates.get(((PartitionState) s.getEndState(outChar)).getPartition()));
                 }
             }
         }

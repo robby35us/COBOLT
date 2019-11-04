@@ -1,12 +1,8 @@
-package scanner.model;
-
-import scanner.generator.minimization.Partition;
+package scanner.model.state;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import static scanner.model.FiniteAutomaton.EPSILON;
 
 public class State {
 
@@ -14,11 +10,11 @@ public class State {
     private Map<Character, State> endStateMap;
     private boolean acceptingState;
 
-    // for depth-first search
+    // for finding cyclic paths in depth-first search algorithms
     private boolean marked = false;
 
-    // for the minimization algorithm
-    private Partition partition;
+
+
 
     public State(boolean acceptingState) {
         this.acceptingState = acceptingState;
@@ -33,14 +29,6 @@ public class State {
         this.marked = marked;
     }
 
-    public void setPartition(Partition p) {
-        partition = p;
-    }
-
-    public Partition getPartition() {
-        return partition;
-    }
-
     public void setAcceptingState(boolean acceptingState) {
         this.acceptingState = acceptingState;
     }
@@ -50,12 +38,10 @@ public class State {
     }
 
     public void setEndState(char c, State endState) {
-        if(c == EPSILON)
-            throw new IllegalArgumentException();
         endStateMap.put (c, endState);
     }
 
-    void setEndState(Set<Character> characterSet, State endState) {
+    public void setEndState(Set<Character> characterSet, State endState) {
         for(char c : characterSet) {
             endStateMap.put(c, endState);
         }
@@ -68,4 +54,5 @@ public class State {
     public Set<Character> getOutTransitionChars() {
         return endStateMap.keySet();
     }
+
 }

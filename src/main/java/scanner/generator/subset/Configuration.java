@@ -1,13 +1,14 @@
 package scanner.generator.subset;
 
-import scanner.model.NDFAState;
-import scanner.model.State;
+import scanner.model.state.NDFAState;
+import scanner.model.state.PartitionState;
+import scanner.model.state.State;
 
 import java.util.Set;
 
 public class Configuration {
     private Set<NDFAState> states;
-    private State resultingState;
+    private PartitionState resultingState;
 
     Configuration(Set<NDFAState> states) {
 
@@ -19,14 +20,14 @@ public class Configuration {
                 break;
             }
         }
-        resultingState = new State(markAsAccepting);
+        resultingState = new PartitionState(markAsAccepting);
     }
 
     Set<NDFAState> getStates() {
         return states;
     }
 
-    State getResultingState() {
+    PartitionState getResultingState() {
         return resultingState;
     }
 

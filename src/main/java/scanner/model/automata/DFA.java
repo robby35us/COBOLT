@@ -1,11 +1,12 @@
-package scanner.model;
+package scanner.model.automata;
 
 import scanner.generator.util.FAPathExplorer;
+import scanner.model.state.State;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class FiniteAutomaton {
+public class DFA {
 
     public static final char EPSILON = '~';
 
@@ -13,7 +14,7 @@ public class FiniteAutomaton {
     private Set<State> states;
     private Set<State> acceptingStates;
 
-    public FiniteAutomaton(State startingState) {
+    public DFA(State startingState) {
         this.startingState = startingState;
         this.states = new HashSet<>();
         this.states.add(startingState);
@@ -82,6 +83,6 @@ public class FiniteAutomaton {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof FiniteAutomaton && this.toString().equals(o.toString());
+        return o instanceof DFA && this.toString().equals(o.toString());
     }
 }

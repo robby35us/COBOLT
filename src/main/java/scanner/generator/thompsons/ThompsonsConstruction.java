@@ -1,7 +1,7 @@
 package scanner.generator.thompsons;
 
 import scanner.language.Regex;
-import scanner.model.NDFA;
+import scanner.model.automata.NDFA;
 
 import java.util.HashSet;
 import java.util.Set;

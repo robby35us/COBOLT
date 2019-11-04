@@ -1,9 +1,9 @@
 package scanner.generator.thompsons;
 
-import scanner.model.NDFA;
-import scanner.model.NDFAState;
+import scanner.model.automata.NDFA;
+import scanner.model.state.NDFAState;
 
-import static scanner.model.FiniteAutomaton.EPSILON;
+import static scanner.model.automata.DFA.EPSILON;
 
 class IntermediateNDFABuilder {
     static NDFA buildSimple(char c) {

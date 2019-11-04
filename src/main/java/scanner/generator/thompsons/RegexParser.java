@@ -1,8 +1,8 @@
 package scanner.generator.thompsons;
 
 import scanner.language.Regex;
-import scanner.model.NDFA;
-import scanner.model.NDFAState;
+import scanner.model.automata.NDFA;
+import scanner.model.state.NDFAState;
 
 import java.util.Stack;
 
